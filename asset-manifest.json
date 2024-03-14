@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/CalendarWithDnDTasks/static/css/main.7b7155e3.css",
-    "main.js": "/CalendarWithDnDTasks/static/js/main.11380f8c.js",
-    "index.html": "/CalendarWithDnDTasks/index.html",
-    "main.7b7155e3.css.map": "/CalendarWithDnDTasks/static/css/main.7b7155e3.css.map",
-    "main.11380f8c.js.map": "/CalendarWithDnDTasks/static/js/main.11380f8c.js.map"
+    "main.css": "/calendar-with-dnd-tasks/static/css/main.7b7155e3.css",
+    "main.js": "/calendar-with-dnd-tasks/static/js/main.3627b3cf.js",
+    "index.html": "/calendar-with-dnd-tasks/index.html",
+    "main.7b7155e3.css.map": "/calendar-with-dnd-tasks/static/css/main.7b7155e3.css.map",
+    "main.3627b3cf.js.map": "/calendar-with-dnd-tasks/static/js/main.3627b3cf.js.map"
   },
   "entrypoints": [
     "static/css/main.7b7155e3.css",
-    "static/js/main.11380f8c.js"
+    "static/js/main.3627b3cf.js"
   ]
 }
