@@ -1,5 +1,5 @@
 import { Dispatch, MutableRefObject, ReactNode, SetStateAction, useEffect, useRef } from 'react';
-import { useOutsideAlerter } from '../../utils/useOutsideAlerter';
+import { useOutsideAlerter } from '../../hooks/useOutsideAlerter';
 import { CloseButton } from '../buttons/CloseButton';
 import { ModalWrapper } from '../styled/ModalWrapper';
 import { Typography } from '../styled/Typography';

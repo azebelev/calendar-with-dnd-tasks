@@ -4,7 +4,7 @@ interface IProps {
   variant?: 'boldXl' | 'bold' | 'boldSm' | 'light' | 'lightSm';
 }
 
-export const Typography = styled.span<IProps>`
+export const Typography = styled.div<IProps>`
   ${({ theme: { palette }, variant }) => {
     switch (variant) {
       case 'boldXl':
@@ -38,6 +38,7 @@ export const Typography = styled.span<IProps>`
         return `
           color: ${palette.common.contrastText};
           font-size: 14px;
+          line-height: 14px;
         `;
     }
   }}

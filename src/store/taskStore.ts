@@ -1,7 +1,7 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { v4 as uuidv4, validate as checkIfUuid } from 'uuid';
 import { create } from 'zustand';
-import { localStorageSync } from '../localStorageDb/localStorageSync';
+import { localStorageSync } from '../utils/localStorageSync';
 import { Task } from '../types/todoTypes';
 import { filterTasks } from '../utils/filterTasks';
 import { getTaskById } from '../utils/getTaskById';
@@ -17,7 +17,11 @@ type StoreActions = {
   addTask: (dto: Omit<Task, 'id'>) => void;
   removeTask: (dto: Pick<Task, 'id' | 'date'>) => void;
   updateTask: (dto: Task) => void;
-  dragSync: (draggableId: UniqueIdentifier, destinationId: UniqueIdentifier) => void;
+  dragSync: (
+    draggableId: UniqueIdentifier,
+    destinationId: UniqueIdentifier,
+    isBlowDestination?: boolean
+  ) => void;
 };
 
 const initialData = localStorageSync.getData();
@@ -30,11 +34,11 @@ const useTaskStore = create<StoreItems & StoreActions>((set, get) => ({
   setFilter: (filterInput) => {
     if (filterInput.length > minFilterLength) {
       const filteredTasks = filterTasks(filterInput, get().tasksByDate);
-      set({ currentFilter:filterInput, filteredTasks });
+      set({ currentFilter: filterInput, filteredTasks });
     }
-  if(get().currentFilter.length > minFilterLength && filterInput.length <= minFilterLength) {
-      set({ currentFilter:'', filteredTasks:get().tasksByDate });
-  }
+    if (get().currentFilter.length > minFilterLength && filterInput.length <= minFilterLength) {
+      set({ currentFilter: '', filteredTasks: get().tasksByDate });
+    }
   },
   updateFilteredTasks: (tasks) => {
     const filter = get().currentFilter;
@@ -51,15 +55,15 @@ const useTaskStore = create<StoreItems & StoreActions>((set, get) => ({
       tasksByDate[dto.date] = [{ id: uuidv4(), ...dto }];
     }
     set({ tasksByDate });
-    get().updateFilteredTasks(tasksByDate)
+    get().updateFilteredTasks(tasksByDate);
     localStorageSync.sync(tasksByDate);
   },
   removeTask: (dto) => {
     const tasksByDate = get().tasksByDate;
     if (tasksByDate[dto.date]) {
       tasksByDate[dto.date] = tasksByDate[dto.date].filter((t) => t.id !== dto.id);
-      set({ tasksByDate } );
-      get().updateFilteredTasks(tasksByDate)
+      set({ tasksByDate });
+      get().updateFilteredTasks(tasksByDate);
       localStorageSync.sync(tasksByDate);
     }
   },
@@ -68,11 +72,11 @@ const useTaskStore = create<StoreItems & StoreActions>((set, get) => ({
     if (tasksByDate[dto.date]) {
       tasksByDate[dto.date] = tasksByDate[dto.date].map((e) => (e.id !== dto.id ? e : dto));
       set({ tasksByDate });
-      get().updateFilteredTasks(tasksByDate)
+      get().updateFilteredTasks(tasksByDate);
       localStorageSync.sync(tasksByDate);
     }
   },
-  dragSync: (draggableId, destinationId) => {
+  dragSync: (draggableId, destinationId, isBlowDestination) => {
     if (!draggableId || !destinationId || destinationId === draggableId) return;
 
     const tasksByDate = get().tasksByDate;
@@ -97,10 +101,11 @@ const useTaskStore = create<StoreItems & StoreActions>((set, get) => ({
       )[0];
       draggableTask.date = containerKey;
       if (indexOfDestination !== undefined) {
-        tasks.splice(indexOfDestination, 0, draggableTask);
+        const position = isBlowDestination ? indexOfDestination + 1 : indexOfDestination;
+        tasks.splice(position, 0, draggableTask);
         tasksByDate[containerKey] = tasks;
         set({ tasksByDate });
-        get().updateFilteredTasks(tasksByDate)
+        get().updateFilteredTasks(tasksByDate);
         localStorageSync.sync(tasksByDate);
       }
     } else {
@@ -111,7 +116,7 @@ const useTaskStore = create<StoreItems & StoreActions>((set, get) => ({
       if (!tasksByDate[destinationId]) tasksByDate[destinationId] = [];
       tasksByDate[destinationId].push(draggableTask);
       set({ tasksByDate });
-      get().updateFilteredTasks(tasksByDate)
+      get().updateFilteredTasks(tasksByDate);
       localStorageSync.sync(tasksByDate);
     }
   },

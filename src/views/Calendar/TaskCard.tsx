@@ -1,3 +1,4 @@
+import { Coordinates } from '@dnd-kit/core/dist/types';
 import { useSortable } from '@dnd-kit/sortable';
 import { useEffect, useState } from 'react';
 import { Dropdown } from '../../components/dropdowns/Dropdown';
@@ -19,9 +20,14 @@ export function TaskCard({ task }: { task: Task }) {
   const [updateModalOpened, setUpdateModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const [disableDragging, setDisableDragging] = useState(false);
-  const onContextMenu = (e: any) => {
+  const [dropDownPosition, setDropdownPosition] = useState<Coordinates>({ x: 0, y: 0 });
+  const onContextMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
+    setDropdownPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
     setDropdownOpened(true);
   };
 
@@ -39,13 +45,16 @@ export function TaskCard({ task }: { task: Task }) {
         transition,
         opacity: active?.id !== task.id ? '1' : '0',
       }
-    : { marginBottom: '6px', cursor: 'grab' };
+    : {
+        cursor: 'grab',
+        ...(dropdownOpened ? { border: '1px solid grey' } : null),
+      };
 
   useEffect(() => {
     if (dropdownOpened || updateModalOpened || deleteModalOpened) {
       setDisableDragging(true);
     } else setDisableDragging(false);
-  }, [dropdownOpened,updateModalOpened,deleteModalOpened]);
+  }, [dropdownOpened, updateModalOpened, deleteModalOpened]);
 
   return (
     <Card
@@ -80,7 +89,7 @@ export function TaskCard({ task }: { task: Task }) {
       ) : null}
       <Typography>{task.text}</Typography>
       {dropdownOpened ? (
-        <Dropdown setOpened={setDropdownOpened}>
+        <Dropdown coordinates={dropDownPosition} setOpened={setDropdownOpened}>
           <MenuItem onClick={() => setUpdateModalOpened(true)}>Update</MenuItem>
           <MenuItem style={{ color: 'red' }} onClick={() => setDeleteModalOpened(true)}>
             Delete

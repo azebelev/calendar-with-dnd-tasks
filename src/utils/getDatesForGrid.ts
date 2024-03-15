@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
+import { ScrollDirection } from '../enums/scrollDirectionEnum';
 
 export type DateData = { date: Dayjs };
 
@@ -25,11 +26,6 @@ export function getCurrentMonthsDatesForGrid(): DateData[] {
   const monthBeforeDays = getMonthDatesFromDate(days[0].date, ScrollDirection.Up);
   const monthAfterDays = getMonthDatesFromDate(days[days.length - 1].date, ScrollDirection.Down);
   return [...monthBeforeDays, ...days, ...monthAfterDays];
-}
-
-export enum ScrollDirection {
-  Up,
-  Down,
 }
 
 export function getMonthDatesFromDate(date: Dayjs, scrollDirection: ScrollDirection) {

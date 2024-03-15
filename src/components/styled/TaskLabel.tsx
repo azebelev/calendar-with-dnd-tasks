@@ -8,9 +8,9 @@ interface IProp {
 export const TaskLabel = styled.div<IProp>`
   display: inline-block;
   margin-right: 3px;
+  margin-bottom: 2px;
   height: 6px;
   width: 30px;
-  line-height: 6px;
   border-radius: 4px;
   background-color: ${({ theme: { palette }, variant }) => {
     switch (variant) {

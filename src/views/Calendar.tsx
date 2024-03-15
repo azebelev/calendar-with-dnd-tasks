@@ -1,12 +1,12 @@
 import { Container } from '../components/styled/Container';
-import { CalendarControlPanel } from './Calendar/CalendarControlPanel';
+import { CalendarHeader } from './Calendar/CalendarHeader';
 import { CalendarGrid } from './Calendar/CalendarGrid';
 
 export function Calendar() {
   return (
     <>
       <Container>
-        <CalendarControlPanel />
+        <CalendarHeader />
         <CalendarGrid />
       </Container>
     </>
