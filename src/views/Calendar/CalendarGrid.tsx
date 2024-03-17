@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent, DragOverlay, Over, UniqueIdentifier } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay, UniqueIdentifier } from '@dnd-kit/core';
 import React, { useRef, useState } from 'react';
 import { validate } from 'uuid';
 import { WeeksGrid } from '../../components/styled/WeeksGrid';
@@ -17,18 +17,20 @@ export function CalendarGrid() {
 
   function handleDragEnd(event: DragEndEvent) {
     if (event.over) {
-      dragSync(event.active.id, event.over.id, getIsDraggableBelow(event.over));
+      dragSync(event.active.id, event.over.id, getIsDraggableBelow(event.over.id));
+      console.log(event);
     }
     setActiveId(undefined);
   }
 
-  function getIsDraggableBelow(over: Over) {
-    if (!validate(over.id as string)) return;
+  function getIsDraggableBelow(overId: UniqueIdentifier) {
+    if (!validate(overId as string)) return;
     const draggableRect = draggableRef.current?.getBoundingClientRect();
-    if (draggableRect) {
+    const dropRect = document.getElementById(overId as string)?.getBoundingClientRect();
+    if (draggableRect && dropRect) {
       const draggableCenterY = draggableRect.top + draggableRect.height / 2;
-      const destCenterY = over.rect.top + over.rect.height / 2;
-      return draggableCenterY > destCenterY ? false : true;
+      const destCenterY = dropRect.top + dropRect.height / 2;
+      return draggableCenterY < destCenterY ? false : true;
     }
   }
 
@@ -49,7 +51,7 @@ export function CalendarGrid() {
           </WeeksGrid>
           <DragOverlay style={{ opacity: 1, cursor: 'grabbing' }}>
             {activeId ? (
-              <div ref={draggableRef} id={'hello'}>
+              <div ref={draggableRef}>
                 <TaskCopy id={activeId} />
               </div>
             ) : null}
