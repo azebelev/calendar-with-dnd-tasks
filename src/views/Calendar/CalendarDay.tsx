@@ -31,7 +31,7 @@ export function CalendarDay({ dateData }: { dateData: DateData }) {
   const handleAddTask = (task: Omit<Task, 'id' | 'date'>) =>
     addTask({ text: task.text, labels: task.labels, date: dateData.date.toISOString() });
 
-  const { setNodeRef,over ,active} = useSortable({
+  const { setNodeRef, over, active } = useSortable({
     id: dateData.date.toISOString(),
   });
 
@@ -52,7 +52,7 @@ export function CalendarDay({ dateData }: { dateData: DateData }) {
 
         <ScrollableContainer height='15vh'>
           <SortableContext strategy={verticalListSortingStrategy} items={tasks.map((e) => e.id)}>
-            <div ref={setNodeRef} style={{ height: '100%'}}>
+            <div ref={setNodeRef} style={{ flex: 1 }}>
               {tasks.length ? tasks.map((t) => <TaskCard key={t.id} task={t} />) : null}
             </div>
           </SortableContext>
